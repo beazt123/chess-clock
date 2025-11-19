@@ -68,7 +68,7 @@ function ChessClock() {
       }
 
       // Ignore specific keys
-      const ignoredKeys = ['Backspace', 'Enter'];
+      const ignoredKeys = ['Backspace', 'Enter', 'Tab'];
       if (ignoredKeys.includes(event.key)) {
         return;
       }
