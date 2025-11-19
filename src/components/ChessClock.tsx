@@ -42,12 +42,48 @@ function ChessClock() {
     setPlayer2Time(player2Setup * 60 * 1000);
   };
 
+  // Play click sound using Web Audio API
+  const playClickSound = useCallback(() => {
+    try {
+      const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const audioContext = new AudioContextClass();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // Sharp, short click sound
+      oscillator.frequency.value = 1000; // 1000 Hz for a sharp click
+      oscillator.type = 'sine';
+      
+      // Quick attack and decay for snappy sound
+      const now = audioContext.currentTime;
+      gainNode.gain.setValueAtTime(0.3, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+      
+      oscillator.start(now);
+      oscillator.stop(now + 0.05);
+      
+      // Clean up after sound finishes
+      oscillator.onended = () => {
+        gainNode.disconnect();
+        oscillator.disconnect();
+        audioContext.close();
+      };
+    } catch (error) {
+      // Silently fail if audio context is not supported
+      console.warn('Audio playback not supported:', error);
+    }
+  }, []);
+
   // Toggle between players
   const togglePlayer = useCallback(() => {
     if (gameState === 'running' && activePlayer) {
+      playClickSound();
       setActivePlayer(activePlayer === 1 ? 2 : 1);
     }
-  }, [gameState, activePlayer]);
+  }, [gameState, activePlayer, playClickSound]);
 
   // Handle keyboard events for clock toggle (ignores modifier, function, and special keys)
   useEffect(() => {
