@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import './ChessClock.css';
 
 type GameState = 'setup' | 'running' | 'paused' | 'timeout';
@@ -24,6 +24,9 @@ function ChessClock() {
   const [gameState, setGameState] = useState<GameState>('setup');
   const [activePlayer, setActivePlayer] = useState<ActivePlayer>(null);
 
+  // Reusable AudioContext instance for audio feedback
+  const audioContextRef = useRef<AudioContext | null>(null);
+
   // Start the game with configured times
   const startGame = () => {
     const p1Time = player1Setup * 60 * 1000;
@@ -42,11 +45,16 @@ function ChessClock() {
     setPlayer2Time(player2Setup * 60 * 1000);
   };
 
-  // Play click sound using Web Audio API
+  // Play click sound using Web Audio API with a reusable AudioContext
   const playClickSound = useCallback(() => {
     try {
-      const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      const audioContext = new AudioContextClass();
+      // Create AudioContext only once and reuse it
+      if (!audioContextRef.current) {
+        const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        audioContextRef.current = new AudioContextClass();
+      }
+
+      const audioContext = audioContextRef.current;
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
       
@@ -65,7 +73,7 @@ function ChessClock() {
       oscillator.start(now);
       oscillator.stop(now + 0.05);
       
-      // Clean up after sound finishes or after timeout fallback
+      // Clean up oscillator and gain nodes after sound finishes
       let cleanedUp = false;
       const cleanup = () => {
         if (!cleanedUp) {
@@ -73,8 +81,7 @@ function ChessClock() {
           try {
             gainNode.disconnect();
             oscillator.disconnect();
-            audioContext.close();
-          } catch (e) {
+          } catch {
             // Ignore cleanup errors
           }
         }
