@@ -65,12 +65,23 @@ function ChessClock() {
       oscillator.start(now);
       oscillator.stop(now + 0.05);
       
-      // Clean up after sound finishes
-      oscillator.onended = () => {
-        gainNode.disconnect();
-        oscillator.disconnect();
-        audioContext.close();
+      // Clean up after sound finishes or after timeout fallback
+      let cleanedUp = false;
+      const cleanup = () => {
+        if (!cleanedUp) {
+          cleanedUp = true;
+          try {
+            gainNode.disconnect();
+            oscillator.disconnect();
+            audioContext.close();
+          } catch (e) {
+            // Ignore cleanup errors
+          }
+        }
       };
+      oscillator.onended = cleanup;
+      // Fallback: cleanup after 60ms in case onended doesn't fire
+      setTimeout(cleanup, 60);
     } catch (error) {
       // Silently fail if audio context is not supported
       console.warn('Audio playback not supported:', error);
