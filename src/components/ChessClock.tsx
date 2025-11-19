@@ -51,8 +51,26 @@ function ChessClock() {
 
   // Handle keyboard events (spacebar or any key)
   useEffect(() => {
-    const handleKeyPress = () => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Ignore modifier keys
+      if (event.altKey || event.metaKey || event.ctrlKey) {
+        return;
+      }
+
+      // Ignore function keys (F1-F12)
+      if (event.key.match(/^F([1-9]|1[0-2])$/)) {
+        return;
+      }
+
+      // Ignore specific keys
+      const ignoredKeys = ['Backspace', 'Enter'];
+      if (ignoredKeys.includes(event.key)) {
+        return;
+      }
+
       if (gameState === 'running') {
+        // Prevent default browser behavior for allowed keys
+        event.preventDefault();
         togglePlayer();
       }
     };
