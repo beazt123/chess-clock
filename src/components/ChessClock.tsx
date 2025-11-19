@@ -49,7 +49,7 @@ function ChessClock() {
     }
   }, [gameState, activePlayer]);
 
-  // Handle keyboard events (spacebar or any key)
+  // Handle keyboard events for clock toggle (ignores modifier, function, and special keys)
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       // Ignore modifier keys
