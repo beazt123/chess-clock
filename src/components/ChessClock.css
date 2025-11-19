@@ -1,3 +1,31 @@
+:root {
+  /* Light mode colors (default) */
+  --text-primary: #213547;
+  --text-secondary: #555;
+  --text-tertiary: #666;
+  --bg-primary: #ffffff;
+  --bg-secondary: rgba(0, 0, 0, 0.03);
+  --input-bg: #f9f9f9;
+  --input-text: #213547;
+  --input-border: #646cff;
+  --border-color: rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark mode colors */
+    --text-primary: rgba(255, 255, 255, 0.87);
+    --text-secondary: #aaa;
+    --text-tertiary: #666;
+    --bg-primary: #242424;
+    --bg-secondary: rgba(255, 255, 255, 0.03);
+    --input-bg: #1a1a1a;
+    --input-text: #fff;
+    --input-border: #646cff;
+    --border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
 .chess-clock-container {
   width: 100vw;
   height: 100vh;
@@ -6,6 +34,7 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s ease;
+  background-color: var(--bg-primary);
 }
 
 .chess-clock-container.timeout {
@@ -37,7 +66,7 @@
 .setup-screen h1 {
   font-size: 2rem;
   margin: 0;
-  color: #000;
+  color: var(--text-primary);
 }
 
 .color-selection {
@@ -62,7 +91,7 @@
 }
 
 .player-name-small {
-  color: #aaa;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -114,14 +143,14 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-secondary);
   border-radius: 10px;
   min-width: 180px;
 }
 
 .player-setup h2 {
   margin: 0;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 1.2rem;
 }
 
@@ -133,7 +162,7 @@
 }
 
 .time-input label {
-  color: #aaa;
+  color: var(--text-secondary);
   font-size: 0.8rem;
 }
 
@@ -143,9 +172,9 @@
   font-size: 1.2rem;
   text-align: center;
   border-radius: 6px;
-  border: 2px solid #646cff;
-  background-color: #1a1a1a;
-  color: #fff;
+  border: 2px solid var(--input-border);
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 .time-input input[type="text"] {
@@ -154,13 +183,13 @@
   font-size: 1rem;
   text-align: center;
   border-radius: 6px;
-  border: 2px solid #646cff;
-  background-color: #1a1a1a;
-  color: #fff;
+  border: 2px solid var(--input-border);
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 .time-input input::placeholder {
-  color: #666;
+  color: var(--text-tertiary);
 }
 
 .start-button {
@@ -196,7 +225,7 @@
   justify-content: center;
   position: relative;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-secondary);
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -212,12 +241,12 @@
 }
 
 .player1-timer {
-  border-right: 2px solid rgba(255, 255, 255, 0.1);
+  border-right: 2px solid var(--border-color);
 }
 
 .player-label {
   font-size: 2rem;
-  color: #aaa;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -243,13 +272,13 @@
 .time-display {
   font-size: 6rem;
   font-weight: bold;
-  color: #000;
+  color: var(--text-primary);
   font-family: 'Courier New', monospace;
   text-shadow: 0 0 20px rgba(100, 108, 255, 0.5);
 }
 
 .timer.active .time-display {
-  color: #000;
+  color: var(--text-primary);
   text-shadow: 0 0 30px rgba(100, 108, 255, 0.8);
 }
 
@@ -362,7 +391,7 @@
 
   .player1-timer {
     border-right: none;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid var(--border-color);
   }
 
   .time-display {
@@ -371,16 +400,6 @@
 
   .player-label {
     font-size: 1.5rem;
-  }
-
-  /* Revert to vertical layout on mobile */
-  .game-screen {
-    flex-direction: column;
-  }
-
-  .player1-timer {
-    border-right: none;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   }
 
   .timeout-message {
