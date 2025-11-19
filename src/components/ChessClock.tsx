@@ -73,8 +73,8 @@ function ChessClock() {
         return;
       }
 
-      if (gameState === 'running') {
-        // Prevent default browser behavior for allowed keys
+      // Only toggle player and prevent default for spacebar
+      if (gameState === 'running' && (event.key === ' ' || event.key === 'Spacebar')) {
         event.preventDefault();
         togglePlayer();
       }
