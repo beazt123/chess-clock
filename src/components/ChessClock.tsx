@@ -49,10 +49,33 @@ function ChessClock() {
     }
   }, [gameState, activePlayer]);
 
-  // Handle keyboard events (spacebar or any key)
+  // Handle keyboard events for clock toggle (ignores modifier, function, and special keys)
   useEffect(() => {
-    const handleKeyPress = () => {
-      if (gameState === 'running') {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Ignore modifier keys
+      if (
+        event.altKey ||
+        event.metaKey ||
+        event.ctrlKey ||
+        ['Alt', 'Meta', 'Control', 'Shift'].includes(event.key)
+      ) {
+        return;
+      }
+
+      // Ignore function keys (F1-F12)
+      if (event.key.match(/^F([1-9]|1[0-2])$/)) {
+        return;
+      }
+
+      // Ignore specific keys
+      const ignoredKeys = ['Backspace', 'Enter', 'Tab'];
+      if (ignoredKeys.includes(event.key)) {
+        return;
+      }
+
+      // Only toggle player and prevent default for spacebar
+      if (gameState === 'running' && (event.key === ' ' || event.key === 'Spacebar')) {
+        event.preventDefault();
         togglePlayer();
       }
     };
