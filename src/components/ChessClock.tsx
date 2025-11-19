@@ -53,7 +53,12 @@ function ChessClock() {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       // Ignore modifier keys
-      if (event.altKey || event.metaKey || event.ctrlKey) {
+      if (
+        event.altKey ||
+        event.metaKey ||
+        event.ctrlKey ||
+        ['Alt', 'Meta', 'Control', 'Shift'].includes(event.key)
+      ) {
         return;
       }
 
