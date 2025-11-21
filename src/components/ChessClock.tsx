@@ -186,6 +186,7 @@ function ChessClock() {
           <div className="color-selection">
             <div className="color-toggle">
               <div className="player-color-indicator">
+                <span className="player-name-small">Player 1</span>
                 <button 
                   className="king-button"
                   onClick={() => setWhitePlayer(whitePlayer === 1 ? 2 : 1)}
@@ -201,6 +202,7 @@ function ChessClock() {
                 ⇄
               </button>
               <div className="player-color-indicator">
+                <span className="player-name-small">Player 2</span>
                 <button 
                   className="king-button"
                   onClick={() => setWhitePlayer(whitePlayer === 1 ? 2 : 1)}

@@ -418,23 +418,103 @@
     font-size: 1rem;
   }
 
-  .color-toggle {
-    gap: 1rem;
-  }
-
   .king-button {
     font-size: 3rem;
-  }
-
-  .swap-button {
-    width: 50px;
-    height: 50px;
-    font-size: 1.5rem;
   }
 
   .reset-button {
     width: 45px;
     height: 45px;
     font-size: 1.6rem;
+  }
+}
+
+/* Portrait mode specific layout - reorganize to associate pieces with players */
+@media (max-width: 768px) and (orientation: portrait) {
+  .setup-screen h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .color-selection {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .color-toggle {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .player-color-indicator {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+  }
+
+  .player-color-indicator .king-button {
+    font-size: 2.5rem;
+    padding: 0.25rem;
+  }
+
+  .player-color-indicator .player-name-small {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .swap-button {
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
+    align-self: center;
+  }
+
+  .setup-controls {
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .player-setup {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    min-width: unset;
+  }
+
+  .player-setup h2 {
+    font-size: 1rem;
+  }
+
+  .time-input {
+    gap: 0.2rem;
+  }
+
+  .time-input label {
+    font-size: 0.75rem;
+  }
+
+  .time-input input[type="text"] {
+    width: 140px;
+    padding: 0.4rem;
+    font-size: 0.9rem;
+  }
+
+  .time-input input[type="number"] {
+    width: 70px;
+    padding: 0.4rem;
+    font-size: 1rem;
+  }
+
+  .start-button {
+    padding: 0.65rem 2rem;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
   }
 }
