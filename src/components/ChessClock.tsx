@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import './ChessClock.css';
 
 type GameState = 'setup' | 'running' | 'paused' | 'timeout';
@@ -24,6 +24,9 @@ function ChessClock() {
   const [gameState, setGameState] = useState<GameState>('setup');
   const [activePlayer, setActivePlayer] = useState<ActivePlayer>(null);
 
+  // Reusable AudioContext instance for audio feedback
+  const audioContextRef = useRef<AudioContext | null>(null);
+
   // Start the game with configured times
   const startGame = () => {
     const p1Time = player1Setup * 60 * 1000;
@@ -42,12 +45,63 @@ function ChessClock() {
     setPlayer2Time(player2Setup * 60 * 1000);
   };
 
+  // Play click sound using Web Audio API with a reusable AudioContext
+  const playClickSound = useCallback(() => {
+    try {
+      // Create AudioContext only once and reuse it
+      if (!audioContextRef.current) {
+        const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        audioContextRef.current = new AudioContextClass();
+      }
+
+      const audioContext = audioContextRef.current;
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // Sharp, short click sound
+      oscillator.frequency.value = 1000; // 1000 Hz for a sharp click
+      oscillator.type = 'sine';
+      
+      // Quick attack and decay for snappy sound
+      const now = audioContext.currentTime;
+      gainNode.gain.setValueAtTime(0.3, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+      
+      oscillator.start(now);
+      oscillator.stop(now + 0.05);
+      
+      // Clean up oscillator and gain nodes after sound finishes
+      let cleanedUp = false;
+      const cleanup = () => {
+        if (!cleanedUp) {
+          cleanedUp = true;
+          try {
+            gainNode.disconnect();
+            oscillator.disconnect();
+          } catch {
+            // Ignore cleanup errors
+          }
+        }
+      };
+      oscillator.onended = cleanup;
+      // Fallback: cleanup after 60ms in case onended doesn't fire
+      setTimeout(cleanup, 60);
+    } catch (error) {
+      // Silently fail if audio context is not supported
+      console.warn('Audio playback not supported:', error);
+    }
+  }, []);
+
   // Toggle between players
   const togglePlayer = useCallback(() => {
     if (gameState === 'running' && activePlayer) {
+      playClickSound();
       setActivePlayer(activePlayer === 1 ? 2 : 1);
     }
-  }, [gameState, activePlayer]);
+  }, [gameState, activePlayer, playClickSound]);
 
   // Handle keyboard events for clock toggle (ignores modifier, function, and special keys)
   useEffect(() => {
