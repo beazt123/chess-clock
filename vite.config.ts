@@ -9,6 +9,10 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['vite.svg'],
+      devOptions: {
+        enabled: true,
+        type: 'module'
+      },
       manifest: {
         name: 'Chess Clock',
         short_name: 'ChessClock',
@@ -16,6 +20,8 @@ export default defineConfig({
         theme_color: '#242424',
         background_color: '#242424',
         display: 'standalone',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: '/icon-192.png',
